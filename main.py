@@ -35,6 +35,7 @@ while True:
         get_price(api_key)
 
         update_csv("test.csv")
+        driver.close()
 
         time.sleep(7200)
     except:
