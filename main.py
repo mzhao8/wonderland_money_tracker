@@ -1,5 +1,7 @@
 from selenium import webdriver
 import os
+import schedule
+import time
 
 from selenium.webdriver.chrome.options import Options
 from coin_test_script import get_price
@@ -11,7 +13,9 @@ from time import sleep
 url = "https://www.wonderland.money/"
 api_key = os.environ['key']
 
-while True:
+
+
+def job():
     try:
         chrome_options = Options()
         chrome_options.add_argument('--no-sandbox')
@@ -36,7 +40,14 @@ while True:
 
         update_csv("test.csv")
         driver.close()
-
-        time.sleep(7200)
     except:
         print(f'error at {current_time}')
+
+# time is in utc, not eastern
+schedule.every().day.at("14:00").do(job)
+schedule.every().day.at("22:00").do(job)
+schedule.every().day.at("06:00").do(job)
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
